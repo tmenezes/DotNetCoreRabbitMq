@@ -14,6 +14,9 @@ namespace DotNetCoreRabbitMq.Queues
             queueClient.QueueDeclare(QueueConstants.Queue2);
             queueClient.QueueBind(QueueConstants.Queue2, QueueConstants.ExchangeName, QueueConstants.NewMessageGenericRoute);
             queueClient.QueueBind(QueueConstants.Queue2, QueueConstants.ExchangeName, QueueConstants.NewMessageSpecificRoute);
+
+            queueClient.QueueDeclare(QueueConstants.Queue3);
+            queueClient.QueueBind(QueueConstants.Queue3, QueueConstants.ExchangeName, QueueConstants.AllMessagesRoute);
         }
     }
 }
