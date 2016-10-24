@@ -25,7 +25,8 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
         public QueueConsumerManager<TMessage> CreateConsumer<TMessage>(MessageQueueService<TMessage> service, ConsumerProperties consumerProperties)
             where TMessage : class
         {
-            return new QueueConsumerManager<TMessage>(_connectionManager, service, consumerProperties);
+            //return new QueueConsumerManager<TMessage>(_connectionManager, service, consumerProperties);
+            return null;
         }
 
         public QueueConsumerManager<TMessage> CreateConsumer<TService, TMessage>(ConsumerProperties consumerProperties)

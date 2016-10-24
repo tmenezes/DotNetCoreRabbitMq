@@ -1,4 +1,4 @@
-﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue;
+﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client;
 using DotNetCoreRabbitMq.Models;
 using DotNetCoreRabbitMq.Queues;
 using Microsoft.AspNetCore.Mvc;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DotNetCoreRabbitMq.Infrastructure.Serializer;
 using RabbitMQ.Client;
 
-namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
+namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client
 {
     public class QueueClient : IQueueClient
     {

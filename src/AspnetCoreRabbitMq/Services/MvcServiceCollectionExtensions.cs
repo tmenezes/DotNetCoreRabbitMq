@@ -1,4 +1,5 @@
 ﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue;
+using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client;
 using DotNetCoreRabbitMq.Infrastructure.Serializer;
 using DotNetCoreRabbitMq.Queues;
 

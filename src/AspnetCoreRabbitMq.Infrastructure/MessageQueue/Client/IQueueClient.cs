@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
+namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client
 {
     public interface IQueueClient
     {

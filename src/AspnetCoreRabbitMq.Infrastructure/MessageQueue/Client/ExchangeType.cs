@@ -1,4 +1,4 @@
-namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
+namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client
 {
     public enum ExchangeType
     {
