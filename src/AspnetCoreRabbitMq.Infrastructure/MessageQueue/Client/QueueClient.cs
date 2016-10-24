@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 using DotNetCoreRabbitMq.Infrastructure.Serializer;
 using RabbitMQ.Client;
 

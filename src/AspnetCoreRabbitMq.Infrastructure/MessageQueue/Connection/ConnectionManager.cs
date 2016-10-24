@@ -1,6 +1,6 @@
 using RabbitMQ.Client;
 
-namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
+namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection
 {
     public class ConnectionManager : IConnectionManager
     {

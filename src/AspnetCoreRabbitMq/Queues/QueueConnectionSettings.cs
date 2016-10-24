@@ -1,4 +1,4 @@
-﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue;
+﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 using Microsoft.Extensions.Options;
 
 namespace DotNetCoreRabbitMq.Queues
