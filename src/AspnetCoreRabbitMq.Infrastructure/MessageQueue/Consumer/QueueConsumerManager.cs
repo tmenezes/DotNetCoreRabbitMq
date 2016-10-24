@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetCoreRabbitMq.Infrastructure.Container;
+using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.MessagePatterns;
