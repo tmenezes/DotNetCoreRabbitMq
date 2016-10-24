@@ -18,3 +18,16 @@ After create the file, the configuration should be like this:
     }
 }
 ```
+
+## Publishing a message to a queue
+1. Start the web applicaiton
+1. Do a ``POST`` to the URL ``~/api/messageQueue``
+1. Set the request header ``Content-Type`` to ``application/json``
+1. Set the ``body`` to:
+```javascrit
+{
+	"data": "my message data",
+	"messageType": 1
+},
+```
+Use ``"messageType": 2`` to publish a message for all queues using the exchange+bind approuch.
