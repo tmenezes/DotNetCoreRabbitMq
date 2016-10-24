@@ -1,0 +1,21 @@
+﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue;
+
+namespace DotNetCoreRabbitMq.Queues
+{
+    public static class QueueInitializer
+    {
+        public static void Initialize(IQueueClient queueClient)
+        {
+            queueClient.ExchangeDeclare(QueueConstants.ExchangeName);
+
+            queueClient.QueueDeclare(QueueConstants.Queue1);
+            queueClient.QueueBind(QueueConstants.Queue1, QueueConstants.ExchangeName, QueueConstants.NewMessageGenericRoute);
+
+            queueClient.QueueDeclare(QueueConstants.Queue2);
+            queueClient.QueueBind(QueueConstants.Queue2, QueueConstants.ExchangeName, QueueConstants.NewMessageGenericRoute);
+            queueClient.QueueBind(QueueConstants.Queue2, QueueConstants.ExchangeName, QueueConstants.NewMessageSpecificRoute);
+
+            queueClient.Dispose();
+        }
+    }
+}
