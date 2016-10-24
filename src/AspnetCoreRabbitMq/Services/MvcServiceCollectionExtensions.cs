@@ -8,6 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddAppServices(this IServiceCollection services)
         {
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<ISerializer, JsonSerializer>();
             services.AddTransient<IQueueClient, QueueClient>();
             services.AddTransient<IQueueConnectionSettings, QueueConnectionSettings>();

@@ -15,7 +15,7 @@ namespace DotNetCoreRabbitMq.Queues
             _optionsAccessor = optionsAccessor;
 
             HostName = _optionsAccessor.Value.HostName;
-            VirtualHost= _optionsAccessor.Value.VirtualHost;
+            VirtualHost = _optionsAccessor.Value.VirtualHost;
             UserName = _optionsAccessor.Value.UserName;
             Password = _optionsAccessor.Value.Password;
         }

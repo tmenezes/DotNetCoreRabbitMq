@@ -8,14 +8,13 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
     public class QueueClient : IQueueClient
     {
         // fields
-        private readonly IQueueConnectionSettings _connectionSettings;
+        private readonly IConnectionManager _connectionManager;
         private readonly ISerializer _serializer;
-        private IConnection _connection;
 
         // constructor
-        public QueueClient(IQueueConnectionSettings connectionSettings, ISerializer serializer)
+        public QueueClient(IConnectionManager connectionManager, ISerializer serializer)
         {
-            _connectionSettings = connectionSettings;
+            _connectionManager = connectionManager;
             _serializer = serializer;
         }
 
@@ -113,41 +112,11 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
             }
         }
 
-        //public IQueueConsumer GetConsumer(string queueName, ConsumerCountManager consumerCountManager, IMessageProcessingWorker messageProcessingWorker, Type expectedType, IMessageRejectionHandler messageRejectionHandler)
-        //{
-        //    return (IQueueConsumer)new RabbitMQConsumer(this.ConnectionPool, queueName, this.Serializer, this.Logger, expectedType, messageProcessingWorker, consumerCountManager, messageRejectionHandler);
-        //}
 
-
-
-        public void Dispose()
-        {
-            _connection?.Close();
-            _connection = null;
-        }
-
-
+        // privates
         private IModel GetModel()
         {
-            if (_connection == null)
-            {
-                _connection = CreateConnection();
-            }
-
-            return _connection.CreateModel();
-        }
-
-        private IConnection CreateConnection()
-        {
-            var factory = new ConnectionFactory
-            {
-                HostName = _connectionSettings.HostName,
-                VirtualHost = _connectionSettings.VirtualHost,
-                UserName = _connectionSettings.UserName,
-                Password = _connectionSettings.Password
-            };
-
-            return factory.CreateConnection();
+            return _connectionManager.GetConnection().CreateModel();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
 {
-    public interface IQueueClient : IDisposable
+    public interface IQueueClient
     {
         void Publish<T>(string exchangeName, string routingKey, T content);
         void BatchPublish<T>(string exchangeName, string routingKey, IEnumerable<T> contentList);
