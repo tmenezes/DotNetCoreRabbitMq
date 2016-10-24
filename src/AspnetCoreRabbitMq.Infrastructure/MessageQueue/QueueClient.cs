@@ -72,11 +72,11 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
             }
         }
 
-        public void ExchangeDeclare(string exchangeName, string type = "topic")
+        public void ExchangeDeclare(string exchangeName, ExchangeType type = ExchangeType.Topic)
         {
             using (var model = GetModel())
             {
-                model.ExchangeDeclare(exchangeName, type, true);
+                model.ExchangeDeclare(exchangeName, GetExchangeTypeName(type), true);
             }
         }
 
@@ -118,5 +118,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue
         {
             return _connectionManager.GetConnection().CreateModel();
         }
+
+        private string GetExchangeTypeName(ExchangeType exchangeType) => exchangeType.ToString().ToLower();
     }
 }
