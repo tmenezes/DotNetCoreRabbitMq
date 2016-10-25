@@ -18,13 +18,19 @@ namespace DotnetCoreRabbitMq.ConsumersConsole
             var container = SetupAndGetContainer();
             var consumerFactory = new QueueConsumerFactory(container);
 
-            var queue1Properties = ConsumerProperties.ForSingleConsumer(QueueConstants.Queue1);
-            var queue1Manager = consumerFactory.CreateConsumerManager<ServiceQueue1, Message>(queue1Properties);
+            var queue1Properties = ConsumerProperties.ForMultipleConsumers(QueueConstants.Queue1, consumersQuantity: 2);
+            var queue1Manager = consumerFactory.CreateConsumerManager<Queue1Service, Message>(queue1Properties);
 
-            var queue1Properties = ConsumerProperties.ForSingleConsumer(QueueConstants.Queue1, 10);
-            var queue1Manager = consumerFactory.CreateConsumerManager<ServiceQueue1, Message>(queue1Properties);
+            var queue2Properties = ConsumerProperties.ForSingleConsumer(QueueConstants.Queue2);
+            var queue2Manager = consumerFactory.CreateConsumerManager<Queue2Service, Message>(queue2Properties);
+
+            var queue3Properties = ConsumerProperties.ForSingleConsumer(QueueConstants.Queue3);
+            var queue3Manager = consumerFactory.CreateConsumerManager<Queue3Service, Message>(queue3Properties);
 
             queue1Manager.Start();
+            queue2Manager.Start();
+            queue3Manager.Start();
+
             Console.ReadLine();
         }
 

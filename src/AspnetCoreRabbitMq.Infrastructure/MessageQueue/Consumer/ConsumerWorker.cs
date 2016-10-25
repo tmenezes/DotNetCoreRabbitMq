@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 using DotNetCoreRabbitMq.Infrastructure.Serializer;
@@ -56,9 +57,19 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
                 var deliveryArguments = subscription.Next();
 
                 var message = _serializer.DeSerialize<TMessage>(deliveryArguments.Body);
-                _service.ProcessMessage(message);
 
-                subscription.Ack(deliveryArguments);
+                try
+                {
+                    _service.ProcessMessage(message);
+
+                    subscription.Ack(deliveryArguments);
+                }
+                catch (Exception ex)
+                {
+                    // make a flexibility way to handle exception
+                    //Console.WriteLine($"Queue unhandled exception. Type: {ex.GetType().Name}, Message: {ex.Message}");
+                    subscription.Nack(deliveryArguments, false, true);
+                }
             }
         }
 

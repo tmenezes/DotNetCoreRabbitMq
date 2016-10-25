@@ -21,7 +21,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             return new ConsumerProperties(queueName, 1);
         }
 
-        public static ConsumerProperties ForSingleConsumer(string queueName, int consumersQuantity)
+        public static ConsumerProperties ForMultipleConsumers(string queueName, int consumersQuantity)
         {
             return new ConsumerProperties(queueName, consumersQuantity);
         }

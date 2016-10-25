@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DotnetCoreRabbitMq.Core;
-using DotNetCoreRabbitMq.Infrastructure;
 using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer;
 
 namespace DotnetCoreRabbitMq.ConsumersConsole
 {
-    public class ServiceQueue1 : IMessageQueueService<Message>
+    public class Queue1Service : IMessageQueueService<Message>
     {
         public void ProcessMessage(Message message)
         {
-            Console.WriteLine($"{nameof(ServiceQueue1)} - Message -> {message.ToString()}");
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+            Console.WriteLine($"Thread {threadId} - {nameof(Queue1Service)} - Message -> {message.ToString()}");
         }
     }
 }
