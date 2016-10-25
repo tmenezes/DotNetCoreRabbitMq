@@ -10,7 +10,9 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
 
         public string QueueName { get; private set; }
         public int ConsumersQuantity { get; private set; }
-        public int PreFetchCount { get; set; }
+        public int PrefetchCount { get; set; }
+        //public AutoScale AutoScale { get; set; }
+        //public ExceptionHandlingStrategy ExceptionHandlingStrategy { get; set; }
 
 
         public static ConsumerProperties ForSingleConsumer(string queueName)

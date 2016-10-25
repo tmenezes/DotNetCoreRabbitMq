@@ -31,7 +31,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         internal void Start()
         {
             _channel = CreateChannel();
-            _channel.BasicQos(0, (ushort)_consumerProperties.PreFetchCount, false);
+            _channel.BasicQos(0, (ushort)_consumerProperties.PrefetchCount, false);
 
             _workerTask.Start();
         }

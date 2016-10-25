@@ -1,3 +1,4 @@
+using System.Linq;
 using DotNetCoreRabbitMq.Infrastructure.Container;
 using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 
@@ -14,27 +15,19 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             _container = container;
         }
 
-        public QueueConsumerManager<TMessage> CreateConsumer<TMessage>(MessageQueueService<TMessage> service, ConsumerProperties consumerProperties)
-            where TMessage : class
-        {
-            //return new QueueConsumerManager<TMessage>(_connectionManager, service, consumerProperties);
-            return null;
-        }
-
-        public QueueConsumerManager<TMessage> CreateConsumer<TService, TMessage>(ConsumerProperties consumerProperties)
+        public QueueConsumerManager<TMessage> CreateConsumerManager<TService, TMessage>(ConsumerProperties consumerProperties)
             where TService : MessageQueueService<TMessage>
             where TMessage : class
         {
-            var service = _container.Resolve<TService>();
+            // creates 'N' workers, on 'N' is equals consumer's quantity defined in ConsumerProperties instance
+            var workers = Enumerable.Range(1, consumerProperties.ConsumersQuantity)
+                                    .Select(i =>
+                                    {
+                                        var service = _container.Resolve<TService>();
+                                        return new ConsumerWorker<TMessage>(_connectionManager, service, consumerProperties);
+                                    });
 
-            return CreateConsumer(service, consumerProperties);
-        }
-
-
-        private ConsumerWorker<TMessage> CreateConsumerWorker<TMessage>(MessageQueueService<TMessage> service, ConsumerProperties consumerProperties)
-            where TMessage : class
-        {
-            return new ConsumerWorker<TMessage>(_connectionManager, service, consumerProperties);
+            return new QueueConsumerManager<TMessage>(workers, consumerProperties);
         }
     }
 }
