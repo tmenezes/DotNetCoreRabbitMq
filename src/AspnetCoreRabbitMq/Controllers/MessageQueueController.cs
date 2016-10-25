@@ -1,7 +1,8 @@
-﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client;
-using DotNetCoreRabbitMq.Models;
+﻿using DotNetCoreRabbitMq.Infrastructure;
+using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client;
 using DotNetCoreRabbitMq.Queues;
 using Microsoft.AspNetCore.Mvc;
+using DotnetCoreRabbitMq.Core;
 
 namespace DotNetCoreRabbitMq.Controllers
 {
@@ -20,7 +21,7 @@ namespace DotNetCoreRabbitMq.Controllers
         public IActionResult Post([FromBody] Message message)
         {
             var messageIsValid = message?.Data != null &&
-                                 message?.MessageType != MessageType.Unknown;
+                                 message.MessageType != MessageType.Unknown;
             if (!messageIsValid)
             {
                 return BadRequest();

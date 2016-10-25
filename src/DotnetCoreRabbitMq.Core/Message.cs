@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotNetCoreRabbitMq.Models
+namespace DotnetCoreRabbitMq.Core
 {
     public class Message
     {
@@ -17,6 +17,11 @@ namespace DotNetCoreRabbitMq.Models
         public string Source { get; set; }
         public string Data { get; set; }
         public MessageType MessageType { get; set; }
+
+        public override string ToString()
+        {
+            return $"Source: {Source}, Data: {Data}, MessageType: {MessageType}";
+        }
     }
 
     public enum MessageType

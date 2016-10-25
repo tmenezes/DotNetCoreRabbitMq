@@ -6,6 +6,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         {
             QueueName = queueName;
             ConsumersQuantity = consumersQuantity;
+            PrefetchCount = 1;
         }
 
         public string QueueName { get; private set; }

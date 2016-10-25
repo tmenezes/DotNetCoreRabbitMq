@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
+using DotNetCoreRabbitMq.Infrastructure.Serializer;
 using RabbitMQ.Client;
 using RabbitMQ.Client.MessagePatterns;
 
@@ -9,29 +10,27 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         where TMessage : class
     {
         private readonly IConnectionManager _connectionManager;
-        private readonly MessageQueueService<TMessage> _service;
+        private readonly IMessageQueueService<TMessage> _service;
         private readonly ConsumerProperties _consumerProperties;
+        private readonly ISerializer _serializer;
         private readonly Task _workerTask;
         private IModel _channel;
 
-        public ConsumerWorker(IConnectionManager connectionManager, MessageQueueService<TMessage> service, ConsumerProperties consumerProperties)
+        public ConsumerWorker(IConnectionManager connectionManager, IMessageQueueService<TMessage> service,
+                             ConsumerProperties consumerProperties, ISerializer serializer)
         {
             _connectionManager = connectionManager;
             _service = service;
             _consumerProperties = consumerProperties;
+            _serializer = serializer;
 
             _workerTask = new Task(Consume);
-        }
-
-        private IModel CreateChannel()
-        {
-            return _connectionManager.GetConnection().CreateModel();
         }
 
         internal void Start()
         {
             _channel = CreateChannel();
-            _channel.BasicQos(0, (ushort)_consumerProperties.PrefetchCount, false);
+            _channel.BasicQos(0, GetPrefetchCount(), false);
 
             _workerTask.Start();
         }
@@ -42,6 +41,12 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             _channel.Close();
         }
 
+
+        private IModel CreateChannel()
+        {
+            return _connectionManager.GetConnection().CreateModel();
+        }
+
         private void Consume()
         {
             var subscription = new Subscription(_channel, _consumerProperties.QueueName, false);
@@ -50,11 +55,19 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             {
                 var deliveryArguments = subscription.Next();
 
-                //var message = (T)  deliveryArguments.Body.DeSerialize(typeof(PurchaseOrder));
-                //var routingKey = deliveryArguments.RoutingKey;
+                var message = _serializer.DeSerialize<TMessage>(deliveryArguments.Body);
+                _service.ProcessMessage(message);
 
                 subscription.Ack(deliveryArguments);
             }
+        }
+
+        private ushort GetPrefetchCount()
+        {
+            if (_consumerProperties.PrefetchCount <= 0)
+                return 1;
+
+            return (ushort)_consumerProperties.PrefetchCount;
         }
     }
 }

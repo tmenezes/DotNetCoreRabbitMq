@@ -1,4 +1,4 @@
-﻿namespace DotNetCoreRabbitMq.Queues
+﻿namespace DotnetCoreRabbitMq.Core
 {
     public static class QueueConstants
     {

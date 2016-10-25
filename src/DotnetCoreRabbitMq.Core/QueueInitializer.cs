@@ -1,6 +1,6 @@
 ﻿using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Client;
 
-namespace DotNetCoreRabbitMq.Queues
+namespace DotnetCoreRabbitMq.Core
 {
     public static class QueueInitializer
     {

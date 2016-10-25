@@ -7,6 +7,9 @@ namespace DotNetCoreRabbitMq.Infrastructure.Container
 {
     public interface IDIContainer
     {
-        T Resolve<T>();
+        TService Resolve<TService>();
+        void RegisterAsSingleton<TService, TImplementor>() where TService : class where TImplementor : class, TService;
+        void RegisterAsTransient<TService, TImplementor>() where TService : class where TImplementor : class, TService;
+        void RegisterAsScoped<TService, TImplementor>() where TService : class where TImplementor : class, TService;
     }
 }
