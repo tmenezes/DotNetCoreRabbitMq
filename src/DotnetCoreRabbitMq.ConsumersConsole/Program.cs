@@ -31,7 +31,13 @@ namespace DotnetCoreRabbitMq.ConsumersConsole
             queue2Manager.Start();
             queue3Manager.Start();
 
+            Console.WriteLine("press any key to exit...");
             Console.ReadLine();
+            Console.WriteLine("stoping...");
+
+            queue1Manager.Stop();
+            queue2Manager.Stop();
+            queue3Manager.Stop();
         }
 
         private static IDIContainer SetupAndGetContainer()
