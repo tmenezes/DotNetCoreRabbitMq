@@ -1,8 +1,10 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection;
 using DotNetCoreRabbitMq.Infrastructure.Serializer;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using RabbitMQ.Client.MessagePatterns;
 
 namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
@@ -10,12 +12,16 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
     internal class ConsumerWorker<TMessage>
         where TMessage : class
     {
+        private const int WAIT_TIME = 3000; // 3 seconds
+
         private readonly IConnectionManager _connectionManager;
         private readonly IMessageQueueService<TMessage> _service;
         private readonly ConsumerProperties _consumerProperties;
         private readonly ISerializer _serializer;
         private readonly Task _workerTask;
+        private readonly CancellationTokenSource _cancellationTokenSource;
         private IModel _channel;
+        string _guid;
 
         public ConsumerWorker(IConnectionManager connectionManager, IMessageQueueService<TMessage> service,
                              ConsumerProperties consumerProperties, ISerializer serializer)
@@ -25,7 +31,10 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             _consumerProperties = consumerProperties;
             _serializer = serializer;
 
+            _cancellationTokenSource = new CancellationTokenSource();
             _workerTask = new Task(Consume);
+
+            _guid = Guid.NewGuid().ToString();
         }
 
         internal void Start()
@@ -38,23 +47,27 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
 
         internal void Stop()
         {
-            // implement cancellation token
-            _channel.Close();
+            _cancellationTokenSource.Cancel();
         }
 
 
         private IModel CreateChannel()
         {
-            return _connectionManager.GetConnection().CreateModel();
+            var channel = _connectionManager.GetConnection().CreateModel();
+            _connectionManager.GetConnection().AutoClose = true;
+
+            return channel;
         }
 
         private void Consume()
         {
             var subscription = new Subscription(_channel, _consumerProperties.QueueName, false);
 
-            while (true)
+            while (!_cancellationTokenSource.IsCancellationRequested)
             {
-                var deliveryArguments = subscription.Next();
+                BasicDeliverEventArgs deliveryArguments;
+                if (!subscription.Next(WAIT_TIME, out deliveryArguments))
+                    continue;
 
                 var message = _serializer.DeSerialize<TMessage>(deliveryArguments.Body);
 
@@ -71,6 +84,9 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
                     subscription.Nack(deliveryArguments, false, true);
                 }
             }
+
+            subscription.Close();
+            _channel.Close();
         }
 
         private ushort GetPrefetchCount()

@@ -22,13 +22,13 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         {
             var serializer = _container.Resolve<ISerializer>();
 
-            // creates 'N' workers, on 'N' is equals consumer's quantity defined in ConsumerProperties instance
+            // creates 'N' workers, where 'N' is equals consumer's quantity defined in ConsumerProperties instance
             var workers = Enumerable.Range(1, consumerProperties.ConsumersQuantity)
                                     .Select(i =>
                                     {
                                         var service = _container.Resolve<TService>();
                                         return new ConsumerWorker<TMessage>(_connectionManager, service, consumerProperties, serializer);
-                                    });
+                                    }).ToList();
 
             return new QueueConsumerManager<TMessage>(workers, consumerProperties);
         }
