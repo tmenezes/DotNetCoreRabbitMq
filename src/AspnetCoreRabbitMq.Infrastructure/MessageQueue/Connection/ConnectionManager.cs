@@ -16,7 +16,8 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Connection
 
         public IConnection GetConnection()
         {
-            if (_connection != null)
+            var connectionIsCreatedAndOpened = _connection?.IsOpen ?? false;
+            if (connectionIsCreatedAndOpened)
             {
                 return _connection;
             }
