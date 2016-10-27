@@ -28,6 +28,23 @@ After create the file, the configuration should be like this:
 {
 	"data": "my message data",
 	"messageType": 1
-},
+}
 ```
 Use ``"messageType": 2`` to publish a message for all queues using the exchange+bind approach.
+
+## Consuming messages from the queue
+You can use the ``QueueConsumerFactory`` class to create a manager for your consumers of a queue.
+Is needed a ``ConsumerProperties`` to create a ``QueueConsumerManager``. 
+A ``ConsumerProperties`` contains all information necessary to create a consumer, like the queue name, quantity of consumer workes...
+The ``QueueConsumerManager`` give us the method ``Start()`` and ``Stop()`` to manager the queue consumers workes.
+A usage sample is bellow:
+```csharp
+var consumerFactory = new QueueConsumerFactory(container);
+
+var consumerProperties = ConsumerProperties.ForMultipleConsumers("MyQueue1", consumersQuantity: 2);
+var consumerManager = consumerFactory.CreateConsumerManager<Queue1Service, Message>(consumerProperties);
+
+consumerManager.Start();
+// do something...
+consumerManager.Stop();
+```    

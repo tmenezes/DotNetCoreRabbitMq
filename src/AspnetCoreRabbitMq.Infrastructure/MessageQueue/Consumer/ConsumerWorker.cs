@@ -24,7 +24,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         string _guid;
 
         public ConsumerWorker(IConnectionManager connectionManager, IMessageQueueService<TMessage> service,
-                             ConsumerProperties consumerProperties, ISerializer serializer)
+                              ConsumerProperties consumerProperties, ISerializer serializer)
         {
             _connectionManager = connectionManager;
             _service = service;
@@ -79,7 +79,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
                 }
                 catch (Exception ex)
                 {
-                    // make a flexibility way to handle exception
+                    // TODO: create a flexibile way to handle exception
                     //Console.WriteLine($"Queue unhandled exception. Type: {ex.GetType().Name}, Message: {ex.Message}");
                     subscription.Nack(deliveryArguments, false, true);
                 }
