@@ -19,7 +19,7 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
         private readonly ConsumerProperties _consumerProperties;
         private readonly ISerializer _serializer;
         private readonly Task _workerTask;
-        private readonly CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
         private IModel _channel;
         string _guid;
 
@@ -31,9 +31,6 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             _consumerProperties = consumerProperties;
             _serializer = serializer;
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            _workerTask = new Task(Consume);
-
             _guid = Guid.NewGuid().ToString();
         }
 
@@ -42,7 +39,8 @@ namespace DotNetCoreRabbitMq.Infrastructure.MessageQueue.Consumer
             _channel = CreateChannel();
             _channel.BasicQos(0, GetPrefetchCount(), false);
 
-            _workerTask.Start();
+            _cancellationTokenSource = new CancellationTokenSource();
+            Task.Factory.StartNew(Consume);
         }
 
         internal void Stop()
